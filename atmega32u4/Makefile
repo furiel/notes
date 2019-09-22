@@ -5,7 +5,7 @@ MCU=atmega32u4
 PROGRAMMER=avr109
 USBDEV:=/dev/ttyACM0
 
-all: simple_blink.hex
+all: simple_blink.hex blink_with_timer_overflow_version.hex blink_with_timer_compare_version.hex
 
 reset:
 	@gpio -g mode 27 out
