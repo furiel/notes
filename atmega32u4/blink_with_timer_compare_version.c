@@ -21,19 +21,42 @@ toggle_led()
 static uint overflow_counter = 0;
 
 static inline void
-setup_clock()
+enable_timer0_compare_interrupt()
+{
+  TIMSK0 = _BV(OCIE0A);
+}
+
+static inline void
+set_timer0_compare_mode()
+{
+  TCCR0A = _BV(WGM01);
+}
+
+static inline void
+set_compare_value()
 {
   OCR0A = 156;
-  TIMSK0 = _BV(OCIE0A);
-  TCCR0A = _BV(WGM01);
+}
+
+static inline void
+setup_clock()
+{
+  set_compare_value();
+  enable_timer0_compare_interrupt();
+  set_timer0_compare_mode();
+}
+
+static inline void
+select_1024_prescaler()
+{
+  TCCR0B = _BV(CS02) | _BV(CS00);
 }
 
 static inline void
 start_clock()
 {
   sei();
-  TCCR0B = _BV(CS02) | _BV(CS00);
-
+  select_1024_prescaler();
 }
 
 static void
@@ -50,8 +73,6 @@ int main()
 
   FOREVER
   {
-    /* toggle_led(); */
-    /* _delay_ms(BLINK_DELAY); */
   }
 }
 
