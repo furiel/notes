@@ -67,8 +67,20 @@ setup()
   start_clock();
 }
 
+static inline void
+fix_bootloader_bug()
+{
+  /* It seems usb generates interrupts that break the code after
+  sei(), unless USB_GEN_vect is defined.
+  Removing and reattaching power also fixes problem. Still, let's just disable USB.
+  Source: https://stackoverflow.com/questions/40214361/atmega32u4-enabling-interrupts-hangs */
+  USBCON = 0;
+}
+
 int main()
 {
+  fix_bootloader_bug();
+
   setup();
 
   FOREVER
