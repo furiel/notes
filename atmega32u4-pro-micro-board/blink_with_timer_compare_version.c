@@ -18,7 +18,7 @@ toggle_led()
     PORTB ^= _BV(PORTB2);
 }
 
-static uint overflow_counter = 0;
+static uint compare_event = 0;
 
 static inline void
 enable_timer0_compare_interrupt()
@@ -35,7 +35,7 @@ set_timer0_compare_mode()
 static inline void
 set_compare_value()
 {
-  OCR0A = 156;
+  OCR0A = 156; // This takes around 0.01s time.
 }
 
 static inline void
@@ -90,10 +90,10 @@ int main()
 
 ISR(TIMER0_COMPA_vect)
 {
-  overflow_counter++;
-  if (overflow_counter == 100)
+  compare_event++;
+  if (compare_event == 100)
     {
       toggle_led();
-      overflow_counter = 0;
+      compare_event = 0;
     }
 }
