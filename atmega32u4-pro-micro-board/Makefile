@@ -20,6 +20,16 @@ reset:
 	@gpio -g toggle 27
 	@sleep 1
 
+quick-reset:
+	@gpio -g mode 27 out
+	@gpio -g write 27 1
+	@sleep 0.1
+	@gpio -g toggle 27
+	@sleep 0.1
+	@gpio -g toggle 27
+	@sleep 0.1
+
+
 flash-%: % reset
 	$(AVRDUDE) -p $(MCU) -c $(PROGRAMMER) -U flash:w:$<:i -D -b57600 -P $(USBDEV) -v
 
