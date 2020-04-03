@@ -1,0 +1,29 @@
+#+OPTIONS: toc:nil        (no default TOC at all)
+#+OPTIONS: html-postamble:nil
+
+* How to create gif
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+A sketch about creating gif
+
+- Create a video that will be converted to gif
+For example with =recordmydesktop=. It outputs to =~/output.ogv= by default.
+
+- Break the video into a series of png.
+
+#+BEGIN_SRC sh
+ffmpeg -r 1 -i ../out.ogv frame%02d.png
+#+END_SRC
+
+- Resize/remove unnecessary frames.
+
+- Install gifski.
+It just worked for me in a simple =ubuntu:xenial= dockera image, volume mounting the frames.
+
+- Run gifski
+
+#+BEGIN_SRC sh
+gifski --fps 1 -o output.gif *.png
+#+END_SRC
