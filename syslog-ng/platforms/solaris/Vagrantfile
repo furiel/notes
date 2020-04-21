@@ -1,0 +1,34 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.vm.box = "plaurin/solaris-11_3"
+  config.ssh.password = "1vagrant"
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "3072"
+    vb.cpus = 3
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo su
+    set +e
+    pkg install git gcc-48
+    (echo "all"; yes) | pkgadd  -d http://get.opencsw.org/now
+
+    /opt/csw/bin/pkgutil -U
+    /opt/csw/bin/pkgutil -y -i autoconf_archive autoconf automake pkgconfig libtool gsed gmake ggrep flex bison libglib2_dev libssl_dev
+
+    export PATH=/opt/csw/bin/:$PATH
+
+    git clone https://github.com/syslog-ng/syslog-ng.git
+    (cd syslog-ng; ./autogen.sh)
+    mkdir build; cd build
+    ../syslog-ng/configure  --disable-java --prefix=`pwd`/root --disable-dependency-tracking
+    gmake -j3 && gmake install
+
+  SHELL
+end
