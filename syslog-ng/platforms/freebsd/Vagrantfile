@@ -1,0 +1,33 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "freebsd/FreeBSD-12.1-STABLE"
+  config.ssh.shell = "sh"
+
+
+  config.vm.provider "virtualbox" do |vb|
+    # Customize the amount of memory on the VM:
+    vb.memory = "3072"
+    vb.cpus = 3
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo su
+    pkg install -y git pkgconf automake glib gmake libtool vim autoconf autoconf-archive flex bison libressl cmake python net-snmp
+
+    # git clone https://github.com/Snaipe/Criterion.git
+    # cd Criterion
+    # git submodule update --init --recursive
+    # meson _build
+    # ninja -C _build install # does not compile undefined reference: environ
+
+    git clone https://github.com/syslog-ng/syslog-ng.git
+    (cd syslog-ng; ./autogen.sh)
+    mkdir build; cd build;
+
+    # for some reason configure uses make instead of gmake for a detection: --disable-dependency-tracking
+    ../syslog-ng/configure --disable-java --prefix=`pwd`/../root --disable-dependency-tracking
+    gmake -j3 && gmake install
+  SHELL
+end
