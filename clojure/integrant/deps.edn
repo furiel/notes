@@ -1,0 +1,3 @@
+{:paths ["src"]
+ :deps {integrant/integrant {:mvn/version "LATEST"}
+        integrant/repl {:mvn/version "LATEST"}}}

@@ -178,3 +178,6 @@ dmypy.json
 .pyre/
 
 .vagrant
+
+.cpcache
+.nrepl-port
