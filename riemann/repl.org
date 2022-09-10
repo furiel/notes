@@ -1,0 +1,16 @@
+* Start a repl server
+
+Add to config
+
+#+BEGIN_SRC clojure
+(riemann.repl/start-server! {})
+#+END_SRC
+
+* Create stream and inject message
+
+Inside the repl
+
+#+BEGIN_SRC clojure
+(riemann.config/streams prn)
+(riemann.core/stream! @config/core {:service "test" :time 1})
+#+END_SRC
